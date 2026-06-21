@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model BirthdayCake {
+  id            String   @id @default(cuid())
+  orderNum      Int
+  shape         String?
+  frostingColor String?
+  decoration    String?
+  ribbon        String?
+  candles       String?
+  isComplete    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  contributors BirthdayContributor[]
+  letters      BirthdayLetter[]
+  polaroids    BirthdayPolaroid[]
+
+  @@map("birthday_cakes")
+}
+
+model BirthdayContributor {
+  id           String   @id @default(cuid())
+  name         String
+  cakeId       String
+  slotNum      Int
+  choice       String
+  arrivalOrder Int
+  createdAt    DateTime @default(now())
+
+  cake   BirthdayCake    @relation(fields: [cakeId], references: [id])
+  letter BirthdayLetter?
+  memory BirthdayMemory?
+  word   BirthdayWord?
+
+  @@map("birthday_contributors")
+}
+
+model BirthdayLetter {
+  id            String   @id @default(cuid())
+  contributorId String   @unique
+  cakeId        String
+  content       String
+  createdAt     DateTime @default(now())
+
+  contributor BirthdayContributor @relation(fields: [contributorId], references: [id])
+  cake        BirthdayCake        @relation(fields: [cakeId], references: [id])
+
+  @@map("birthday_letters")
+}
+
+model BirthdayMemory {
+  id            String   @id @default(cuid())
+  contributorId String   @unique
+  content       String
+  createdAt     DateTime @default(now())
+
+  contributor BirthdayContributor @relation(fields: [contributorId], references: [id])
+
+  @@map("birthday_memories")
+}
+
+model BirthdayWord {
+  id            String   @id @default(cuid())
+  contributorId String   @unique
+  word          String
+  createdAt     DateTime @default(now())
+
+  contributor BirthdayContributor @relation(fields: [contributorId], references: [id])
+
+  @@map("birthday_words")
+}
+
+model BirthdayPolaroid {
+  id        String   @id @default(cuid())
+  cakeId    String?
+  imageUrl  String?
+  caption   String?
+  posX      Float
+  posY      Float
+  rotation  Float    @default(0)
+  zIndex    Int      @default(1)
+  createdAt DateTime @default(now())
+
+  cake BirthdayCake? @relation(fields: [cakeId], references: [id])
+
+  @@map("birthday_polaroids")
+}
