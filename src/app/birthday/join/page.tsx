@@ -4,14 +4,15 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 const RELATIONSHIPS = [
-  { id: "bestfriend",  label: "Best Friend",     emoji: "🌸" },
-  { id: "friend",      label: "Friend",           emoji: "✨" },
-  { id: "family",      label: "Family",           emoji: "🎀" },
-  { id: "classmate",   label: "Classmate",        emoji: "📚" },
-  { id: "colleague",   label: "Colleague",        emoji: "🌿" },
-  { id: "online",      label: "Online Friend",    emoji: "💫" },
-  { id: "neighbour",   label: "Neighbour",        emoji: "🏡" },
-  { id: "other",       label: "Someone who loves her", emoji: "♡" },
+  { id: "bestfriend",   label: "Best Friend",              emoji: "🌸" },
+  { id: "closefriend",  label: "Close Friend",             emoji: "💕" },
+  { id: "friend",       label: "Friend",                   emoji: "✨" },
+  { id: "friendsfriend-close", label: "friends friend but we close", emoji: "🤝" },
+  { id: "friendsfriend", label: "Friends Friend",          emoji: "👋" },
+  { id: "casual",       label: "Casual Friends",           emoji: "🌿" },
+  { id: "online",       label: "Online Friend",            emoji: "💫" },
+  { id: "family",       label: "Family",                   emoji: "🎀" },
+  { id: "stranger",     label: "Stranger",                 emoji: "🌙" },
 ]
 
 export default function JoinPage() {
@@ -45,8 +46,14 @@ export default function JoinPage() {
 
   function handleRelationSelect(id: string) {
     setRelation(id)
-    sessionStorage.setItem("bdContributorName", name.trim())
+    sessionStorage.setItem("bdContributorName", name.trim() || "Anonymous")
     sessionStorage.setItem("bdContributorRelation", id)
+    router.push("/birthday/contribute")
+  }
+
+  function handleAnonymous() {
+    sessionStorage.setItem("bdContributorName", "Anonymous")
+    sessionStorage.setItem("bdContributorRelation", "anonymous")
     router.push("/birthday/contribute")
   }
 
@@ -107,6 +114,14 @@ export default function JoinPage() {
               </button>
             </form>
 
+            <button
+              className="btn-scrapbook-ghost"
+              style={{ fontSize: 14, color: "rgba(120,90,60,0.55)", borderColor: "rgba(180,140,90,0.2)" }}
+              onClick={handleAnonymous}
+            >
+              i wish to be anonymous 🌙
+            </button>
+
             <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "4px 0" }}>
               <div style={{ flex: 1, height: 1, background: "rgba(180,140,90,0.2)" }}/>
               <span className="font-caveat" style={{ fontSize: 14, color: "rgba(120,90,60,0.5)" }}>or</span>
@@ -131,32 +146,35 @@ export default function JoinPage() {
               </p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
               {RELATIONSHIPS.map(r => (
                 <button
                   key={r.id}
                   onClick={() => handleRelationSelect(r.id)}
+                  className="relation-btn"
                   style={{
                     background: relation === r.id ? "rgba(180,100,120,0.12)" : "rgba(255,252,240,0.9)",
-                    border: "1.5px solid rgba(180,140,90,0.25)",
+                    border: relation === r.id ? "1.5px solid rgba(180,100,120,0.45)" : "1.5px solid rgba(180,140,90,0.25)",
                     borderRadius: 10,
-                    padding: "14px 10px",
+                    padding: "12px 6px",
                     cursor: "pointer",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 6,
+                    gap: 5,
                     transition: "all 0.15s ease",
                     fontFamily: "'Caveat', cursive",
                   }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(180,100,120,0.45)")}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(180,140,90,0.25)")}
                 >
-                  <span style={{ fontSize: 22 }}>{r.emoji}</span>
-                  <span style={{ fontSize: 14, color: "#5C3D2E", lineHeight: 1.3 }}>{r.label}</span>
+                  <span className="relation-emoji" style={{ fontSize: 20, display: "inline-block", transition: "transform 0.2s ease" }}>{r.emoji}</span>
+                  <span style={{ fontSize: 12, color: "#5C3D2E", lineHeight: 1.3, textAlign: "center" }}>{r.label}</span>
                 </button>
               ))}
             </div>
+            <style>{`
+              .relation-btn:hover .relation-emoji { transform: translateY(-4px) scale(1.15); }
+              .relation-btn:hover { border-color: rgba(180,100,120,0.45) !important; }
+            `}</style>
 
             <button className="btn-scrapbook-ghost" style={{ fontSize: 14 }} onClick={() => setStep("name")}>
               ← back

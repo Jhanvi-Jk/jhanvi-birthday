@@ -107,14 +107,27 @@ export default function ContributePage() {
 
   if (step === "done") {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20, padding: 32, position: "relative", zIndex: 5 }}>
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: 32, position: "relative", zIndex: 5 }}>
         <div style={{ fontSize: 48 }}>🎀</div>
         <h2 className="font-cormorant" style={{ fontSize: 32, textAlign: "center" }}>thank you, {name} ♡</h2>
         <p className="font-caveat" style={{ fontSize: 18, color: "#9B7560", textAlign: "center", maxWidth: 320, lineHeight: 1.6 }}>
-          your letter, wish, and memory have been tucked into Jhanvi&apos;s scrapbook forever.
+          your letter, wish, and memory have been<br/>tucked into Jhanvi&apos;s scrapbook forever.
         </p>
-        <CakeDisplay cake={previewCake} size={180} style={{ marginTop: 8 }} />
-        <button className="btn-scrapbook" onClick={() => router.push("/birthday")} style={{ marginTop: 16 }}>
+        <div style={{
+          background: "rgba(255,252,240,0.9)",
+          border: "1.5px solid rgba(180,140,90,0.2)",
+          borderRadius: 16,
+          padding: "24px 32px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+        }}>
+          <p className="font-caveat" style={{ fontSize: 13, color: "rgba(120,90,60,0.5)", marginBottom: 4 }}>your contribution to the cake</p>
+          <CakeDisplay cake={previewCake} size={160} />
+        </div>
+        <button className="btn-scrapbook" onClick={() => router.push("/birthday")} style={{ marginTop: 8 }}>
           see the scrapbook ✦
         </button>
       </div>
@@ -147,6 +160,10 @@ export default function ContributePage() {
           </div>
 
           {/* Options grid */}
+          <style>{`
+            .cake-opt-btn:hover .cake-opt-icon { transform: translateY(-5px) scale(1.12); }
+            .cake-opt-btn:hover { border-color: rgba(180,100,120,0.45) !important; }
+          `}</style>
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
@@ -156,6 +173,7 @@ export default function ContributePage() {
               <button
                 key={opt.id}
                 onClick={() => handleOptionSelect(opt)}
+                className="cake-opt-btn"
                 style={{
                   background: selectedChoice === opt.id
                     ? "rgba(180,100,120,0.12)"
@@ -170,21 +188,26 @@ export default function ContributePage() {
                   flexDirection: "column",
                   alignItems: "center",
                   gap: 8,
-                  transition: "all 0.15s ease",
+                  transition: "border-color 0.15s ease",
                   fontFamily: "'Caveat', cursive",
                 }}
               >
-                {opt.color && (
-                  <div style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    background: opt.color,
-                    border: "2px solid rgba(180,140,90,0.2)",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                  }}/>
-                )}
-                {opt.emoji && <span style={{ fontSize: 24 }}>{opt.emoji}</span>}
+                <span className="cake-opt-icon" style={{ display: "inline-block", transition: "transform 0.2s ease" }}>
+                  {opt.color && (
+                    <div style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      background: opt.color,
+                      border: "2px solid rgba(180,140,90,0.2)",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                    }}/>
+                  )}
+                  {mySlot === 1 && opt.id && (
+                    <CakeDisplay cake={{ shape: opt.id as never }} size={64} />
+                  )}
+                  {opt.emoji && mySlot !== 1 && <span style={{ fontSize: 28 }}>{opt.emoji}</span>}
+                </span>
                 <span style={{ fontSize: 14, color: "#5C3D2E", textAlign: "center", lineHeight: 1.3 }}>
                   {opt.label}
                 </span>
