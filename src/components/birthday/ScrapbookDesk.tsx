@@ -202,8 +202,8 @@ export default function ScrapbookDesk({ cakes, memories, words, polaroids }: Pro
         {/* Main desk area */}
         <div style={{ position: "relative", minHeight: 900, margin: "0 auto", maxWidth: 1100, padding: "0 16px" }}>
 
-          {/* Scattered polaroid placeholders */}
-          {allPolaroids.map((p, i) => (
+          {/* Only show polaroids that have actual images uploaded */}
+          {allPolaroids.filter(p => p.db?.imageUrl).map((p, i) => (
             <div
               key={i}
               style={{
@@ -214,7 +214,7 @@ export default function ScrapbookDesk({ cakes, memories, words, polaroids }: Pro
               }}
             >
               <Polaroid
-                imageUrl={p.db?.imageUrl}
+                imageUrl={p.db!.imageUrl}
                 caption={p.db?.caption ?? undefined}
                 rotation={p.tilt}
                 animationDelay={p.delay}
@@ -262,6 +262,28 @@ export default function ScrapbookDesk({ cakes, memories, words, polaroids }: Pro
               </p>
             </div>
           )}
+        </div>
+
+        {/* July 3rd teaser banner */}
+        <div style={{ maxWidth: 600, margin: "40px auto 0", padding: "0 24px" }}>
+          <div style={{
+            background: "rgba(255,252,240,0.92)",
+            border: "1.5px solid rgba(180,140,90,0.22)",
+            borderRadius: 16,
+            padding: "24px 32px",
+            textAlign: "center",
+            position: "relative",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+          }}>
+            <div className="washi washi-mint" style={{ position: "absolute", top: -9, left: "50%", transform: "translateX(-50%) rotate(1deg)", width: 60 }} />
+            <p className="font-cormorant" style={{ fontSize: 20, fontWeight: 600, color: "#5C3D2E", marginBottom: 6 }}>
+              this scrapbook blooms on July 3rd ✦
+            </p>
+            <p className="font-caveat" style={{ fontSize: 15, color: "#9B7560", lineHeight: 1.6 }}>
+              letters, cakes, and memories are being tucked in.<br />
+              everything reveals on her birthday — come back then ♡
+            </p>
+          </div>
         </div>
 
         {/* Words section */}
